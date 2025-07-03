@@ -23,7 +23,9 @@ export class FarmService {
   }
 
   async findById(id: number): Promise<Farm | null> {
-    return this.repo.findById(id);
+    const farm = this.repo.findById(id);
+    if (!farm) throw new Error('Not found');
+    return farm;
   }
 
   async update(id: number, data: Partial<Farm>): Promise<Farm | null> {
@@ -52,7 +54,7 @@ export class FarmService {
 
   async findCultivatesByFarmId(farmId: number) {
     const harvests = await this.harvestRepo.listByFarmId(farmId);
-    const harvestIds = harvests.map(h => h.id);
+    const harvestIds = harvests.map(harvest => harvest.id);
     if (!harvestIds.length) return [];
     return this.cultivateRepo.listByHarvestIds(harvestIds);
   }

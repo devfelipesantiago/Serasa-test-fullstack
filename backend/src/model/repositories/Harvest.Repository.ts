@@ -23,14 +23,13 @@ export class HarvestRepository implements IHarvestRepository {
   async delete(id: number): Promise<void> {
     await this.repo.delete(id);
   }
-  async listByFarmId(farmIds: number | number[]): Promise<Harvest[]> {
-    if (Array.isArray(farmIds)) {
-      if (!farmIds.length) return [];
-      return this.repo.find({ where: { farm_id: In(farmIds) } });
-    }
-    return this.repo.find({ where: { farm_id: farmIds } });
+  async listByFarmId(farmId: number): Promise<Harvest[]> {
+    return this.repo.find({ where: { farm_id: farmId } });
   }
-  async findWithCultivates(id: number): Promise<Harvest | null> {
+  async findWithCultivates(id: number): Promise<Harvest[] | null> {
+    return this.repo.find({where: { id }, relations: ['cultivates'] });
+  }
+  async findHaverstWithCultivatesAndFarms(id: number): Promise<Harvest | null> {
     return this.repo.findOne({ where: { id }, relations: ['cultivates', 'farm'] });
   }
 } 

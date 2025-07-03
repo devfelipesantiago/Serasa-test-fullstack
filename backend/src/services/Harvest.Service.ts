@@ -17,7 +17,9 @@ export class HarvestService {
   }
 
   async findById(id: number): Promise<Harvest | null> {
-    return this.repo.findById(id);
+    const harvest = this.repo.findById(id);
+    if (!harvest) throw new Error('Not found');
+    return harvest;
   }
 
   async update(id: number, data: Partial<Harvest>): Promise<Harvest | null> {
@@ -32,11 +34,15 @@ export class HarvestService {
     return this.repo.listByFarmId(farmId);
   }
 
-  async findWithCultivates(id: number): Promise<Harvest | null> {
+  async findWithCultivates(id: number): Promise<Harvest[] | null> {
     return this.repo.findWithCultivates(id);
   }
 
   async findCultivatesByHarvestId(harvestId: number) {
-    return this.cultivateRepo.listByHarvestIds([harvestId]);
+    return this.cultivateRepo.listByHarvestIds(harvestId);
+  }
+
+  async findHaverstWithCultivatesAndFarmsById(harvestId: number) {
+    return this.repo.findHaverstWithCultivatesAndFarms(harvestId);
   }
 }

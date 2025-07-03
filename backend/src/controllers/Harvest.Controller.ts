@@ -9,64 +9,37 @@ export class HarvestController {
   }
 
   async create(req: Request, res: Response) {
-    try {
-      const harvest = await this.harvestService.createHarvest(req.body);
-      return res.status(201).json(harvest);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(400).json({ error: errMsg });
-    }
+    const harvest = await this.harvestService.createHarvest(req.body);
+    return res.status(201).json(harvest);
   }
 
   async findAll(req: Request, res: Response) {
-    try {
-      const harvests = await this.harvestService.findAll();
-      return res.json(harvests);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({ error: errMsg });
-    }
+    const harvests = await this.harvestService.findAll();
+    return res.json(harvests);
   }
 
   async findById(req: Request, res: Response) {
-    try {
-      const harvest = await this.harvestService.findById(Number(req.params.id));
-      if (!harvest) return res.status(404).json({ error: 'Not found' });
-      return res.json(harvest);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({ error: errMsg });
-    }
+    const harvest = await this.harvestService.findById(Number(req.params.id));
+    return res.json(harvest);
   }
 
   async update(req: Request, res: Response) {
-    try {
-      const harvest = await this.harvestService.update(Number(req.params.id), req.body);
-      return res.json(harvest);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(400).json({ error: errMsg });
-    }
+    const harvest = await this.harvestService.update(Number(req.params.id), req.body);
+    return res.json(harvest);
   }
 
   async delete(req: Request, res: Response) {
-    try {
-      await this.harvestService.delete(Number(req.params.id));
-      return res.status(204).send();
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(400).json({ error: errMsg });
-    }
+    await this.harvestService.delete(Number(req.params.id));
+    return res.status(204).send();
   }
 
   async getCultivatesByHarvestId(req: Request, res: Response) {
-    try {
-      const { harvestId } = req.params;
-      const cultivates = await this.harvestService.findCultivatesByHarvestId(Number(harvestId));
-      return res.status(200).json(cultivates);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(400).json({ error: errMsg });
-    }
+    const cultivates = await this.harvestService.findCultivatesByHarvestId(Number(req.params.harvestId));
+    return res.json(cultivates);
   }
+
+  async getHaverstWithCultivatesAndFarmsById(req: Request, res: Response) {
+    const harvest = await this.harvestService.findHaverstWithCultivatesAndFarmsById(Number(req.params.harvestId));
+    return res.json(harvest);
+   }
 }

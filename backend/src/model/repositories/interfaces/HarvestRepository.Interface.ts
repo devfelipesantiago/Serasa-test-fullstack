@@ -6,6 +6,7 @@ export interface IHarvestRepository {
   findById(id: number): Promise<Harvest | null>;
   update(id: number, data: Partial<Harvest>): Promise<Harvest | null>;
   delete(id: number): Promise<void>;
-  listByFarmId(farmId: number[]): Promise<Harvest[]>;
-  findWithCultivates(id: number): Promise<Harvest | null>;
+  listByFarmId(farmId: number): Promise<Harvest[]>;
+  findWithCultivates(id: number): Promise<Harvest[] | null>
+  findHaverstWithCultivatesAndFarms(id: number): Promise<Harvest | null>;
 } 

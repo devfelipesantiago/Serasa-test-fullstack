@@ -24,12 +24,14 @@ export class CultivateRepository implements ICultivateRepository {
     await this.repo.delete(id);
   }
 
-  async listByHarvestIds(harvestIds: number[]): Promise<Cultivate[]> {
-    if (!harvestIds.length) return [];
-    return this.repo.find({ where: { harvest_id: In(harvestIds) } });
+  async listByHarvestIds(harvestId: number): Promise<Cultivate[]> {
+    return this.repo.find({ where: { harvest: { id: harvestId } } });
   }
-  async listByFarmIds(farmIds: number[]): Promise<Cultivate[]> {
-    if (!farmIds.length) return [];
-    return this.repo.find({ where: { harvest: { farm_id: In(farmIds) } } });
+
+  async listByFarmIds(farmId: number): Promise<Cultivate[]> {
+    return this.repo.find({
+      where: { harvest: { farm_id: farmId } },
+      relations: ['harvest'],
+    });
   }
 } 

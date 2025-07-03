@@ -32,7 +32,9 @@ export class ProducerService {
   }
 
   async findById(id: number): Promise<Producer | null> {
-    return this.repo.findById(id);
+    const producer = this.repo.findById(id);
+    if (!producer) throw new Error('Not found');
+    return producer;
   }
 
   async update(id: number, data: Partial<Producer>): Promise<Producer | null> {

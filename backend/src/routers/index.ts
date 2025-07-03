@@ -52,6 +52,7 @@ router.get('/harvests/:id', (req, res) => { harvestController.findById(req, res)
 router.put('/harvests/:id', (req, res) => { harvestController.update(req, res); });
 router.delete('/harvests/:id', (req, res) => { harvestController.delete(req, res); });
 router.get('/harvests/:harvestId/cultivates', (req, res) => { cultivateController.getCultivateByHarvestId(req, res); });
+router.get('/harvests/:harvestId/cultivates/farms', (req, res) => { harvestController.getHaverstWithCultivatesAndFarmsById(req, res); });
 
 router.post('/cultivates', (req, res) => { cultivateController.create(req, res); });
 router.get('/cultivates', (req, res) => { cultivateController.findAll(req, res); });

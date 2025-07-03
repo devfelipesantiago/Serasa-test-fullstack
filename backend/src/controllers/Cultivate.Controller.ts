@@ -9,64 +9,33 @@ export class CultivateController {
   }
 
   async create(req: Request, res: Response) {
-    try {
-      const cultivate = await this.cultivateService.createCultivate(req.body);
-      return res.status(201).json(cultivate);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(400).json({ error: errMsg });
-    }
+    const cultivate = await this.cultivateService.createCultivate(req.body);
+    return res.status(201).json(cultivate);
   }
 
   async findAll(req: Request, res: Response) {
-    try {
-      const cultivates = await this.cultivateService.findAll();
-      return res.json(cultivates);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({ error: errMsg });
-    }
+    const cultivates = await this.cultivateService.findAll();
+    return res.json(cultivates);
   }
 
   async findById(req: Request, res: Response) {
-    try {
-      const cultivate = await this.cultivateService.findById(Number(req.params.id));
-      if (!cultivate) return res.status(404).json({ error: 'Not found' });
-      return res.json(cultivate);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({ error: errMsg });
-    }
+    const cultivate = await this.cultivateService.findById(Number(req.params.id));
+    if (!cultivate) throw new Error('Not found');
+    return res.json(cultivate);
   }
 
   async update(req: Request, res: Response) {
-    try {
-      const cultivate = await this.cultivateService.update(Number(req.params.id), req.body);
-      return res.json(cultivate);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(400).json({ error: errMsg });
-    }
+    const cultivate = await this.cultivateService.update(Number(req.params.id), req.body);
+    return res.json(cultivate);
   }
 
   async delete(req: Request, res: Response) {
-    try {
-      await this.cultivateService.delete(Number(req.params.id));
-      return res.status(204).send();
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(400).json({ error: errMsg });
-    }
+    await this.cultivateService.delete(Number(req.params.id));
+    return res.status(204).send();
   }
 
   async getCultivateByHarvestId(req: Request, res: Response) {
-    try {
-      const { harvestId } = req.params;
-      const cultivates = await this.cultivateService.listByHarvestId(Number(harvestId));
-      return res.status(200).json(cultivates);
-    } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      return res.status(400).json({ error: errMsg });
-    }
+    const cultivates = await this.cultivateService.listByHarvestId(Number(req.params.harvestId));
+    return res.json(cultivates);
   }
 }
