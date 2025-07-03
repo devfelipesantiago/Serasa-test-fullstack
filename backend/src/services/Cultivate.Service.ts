@@ -25,10 +25,10 @@ export class CultivateService {
   }
 
   async listByHarvestId(harvestId: number): Promise<Cultivate[]> {
-    return this.repo.listByHarvestIds(harvestId);
+    return this.repo.listByHarvestId(harvestId);
   }
 
   async listByFarmId(farmId: number): Promise<Cultivate[]> {
-    return this.repo.listByFarmIds(farmId);
+    return this.repo.listByFarmId(farmId);
   }
 }

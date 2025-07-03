@@ -8,5 +8,5 @@ export interface IFarmRepository {
   delete(id: number): Promise<void>;
   findByState(state: string): Promise<Farm[]>;
   listByProducerId(producerId: number): Promise<Farm[]>;
-  findWithRelations(id: number): Promise<Farm | null>;
+  findByIdWithHarvestsAndProducer(id: number): Promise<Farm | null>;
 } 

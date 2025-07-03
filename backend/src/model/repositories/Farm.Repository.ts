@@ -28,7 +28,7 @@ export class FarmRepository implements IFarmRepository {
   async listByProducerId(producerId: number): Promise<Farm[]> {
     return this.repo.find({ where: { producer_id: producerId } });
   }
-  async findWithRelations(id: number): Promise<Farm | null> {
+  async findByIdWithHarvestsAndProducer(id: number): Promise<Farm | null> {
     return this.repo.findOne({ where: { id }, relations: ['harvests', 'producer'] });
   }
 } 

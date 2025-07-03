@@ -25,7 +25,7 @@ export class ProducerRepository implements IProducerRepository {
   async findByDocument(document: string): Promise<Producer | null> {
     return this.repo.findOneBy({ document });
   }
-  async findWithFarms(id: number): Promise<Producer | null> {
+  async findByIdWithFarms(id: number): Promise<Producer | null> {
     return this.repo.findOne({ where: { id }, relations: ['farms'] });
   }
 } 

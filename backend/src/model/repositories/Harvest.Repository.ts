@@ -26,10 +26,10 @@ export class HarvestRepository implements IHarvestRepository {
   async listByFarmId(farmId: number): Promise<Harvest[]> {
     return this.repo.find({ where: { farm_id: farmId } });
   }
-  async findWithCultivates(id: number): Promise<Harvest[] | null> {
-    return this.repo.find({where: { id }, relations: ['cultivates'] });
+  async findWithCultivates(id: number): Promise<Harvest | null> {
+    return this.repo.findOne({ where: { id }, relations: ['cultivates'] });
   }
-  async findHaverstWithCultivatesAndFarms(id: number): Promise<Harvest | null> {
+  async findByIdWithFarmAndCultivates(id: number): Promise<Harvest | null> {
     return this.repo.findOne({ where: { id }, relations: ['cultivates', 'farm'] });
   }
 } 

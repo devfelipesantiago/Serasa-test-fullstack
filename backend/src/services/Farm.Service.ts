@@ -44,8 +44,8 @@ export class FarmService {
     return this.repo.listByProducerId(producerId);
   }
 
-  async findWithRelations(id: number): Promise<Farm | null> {
-    return this.repo.findWithRelations(id);
+  async findByIdWithHarvestsAndProducer(id: number): Promise<Farm | null> {
+    return this.repo.findByIdWithHarvestsAndProducer(id);
   }
 
   async findHarvestsByFarmId(farmId: number) {
@@ -55,7 +55,6 @@ export class FarmService {
   async findCultivatesByFarmId(farmId: number) {
     const harvests = await this.harvestRepo.listByFarmId(farmId);
     const harvestIds = harvests.map(harvest => harvest.id);
-    if (!harvestIds.length) return [];
     return this.cultivateRepo.listByHarvestIds(harvestIds);
   }
 }

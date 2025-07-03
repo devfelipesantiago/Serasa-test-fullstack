@@ -38,6 +38,11 @@ export class FarmController {
     return res.status(200).json(harvests);
   }
 
+  async getHarvestsByFarmIds(req: Request, res: Response) {
+    const harvests = await this.farmService.findCultivatesByFarmId(Number(req.params.farmId));
+    return res.status(200).json(harvests);
+  }
+
   async getCultivatesByFarmId(req: Request, res: Response) {
     const cultivates = await this.farmService.findCultivatesByFarmId(Number(req.params.farmId));
     return res.status(200).json(cultivates);

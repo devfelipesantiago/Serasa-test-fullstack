@@ -9,7 +9,7 @@ export class Producer {
   @Column()
   name!: string;
 
-  @Column()
+  @Column({ unique: true})
   document!: string;
 
   @OneToMany(() => Farm, farm => farm.producer)

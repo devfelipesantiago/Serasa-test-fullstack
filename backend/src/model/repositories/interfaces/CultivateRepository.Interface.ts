@@ -6,6 +6,7 @@ export interface ICultivateRepository {
   findById(id: number): Promise<Cultivate | null>;
   update(id: number, data: Partial<Cultivate>): Promise<Cultivate | null>;
   delete(id: number): Promise<void>;
-  listByHarvestIds(harvestId: number): Promise<Cultivate[]>;
-  listByFarmIds(farmId: number): Promise<Cultivate[]>;
+  listByHarvestIds(harvestIds: number[]): Promise<Cultivate[]>
+  listByHarvestId(harvestId: number): Promise<Cultivate[]>;
+  listByFarmId(farmId: number): Promise<Cultivate[]>;
 } 

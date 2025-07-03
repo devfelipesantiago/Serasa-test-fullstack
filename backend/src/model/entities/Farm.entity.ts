@@ -6,13 +6,13 @@ import { Harvest } from "./Harvest.entity";
 export class Farm {
   @PrimaryGeneratedColumn()
   id!: number;
+  
+  @Column()
+  producer_id!: number;
 
   @ManyToOne(() => Producer, producer => producer.farms, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'producer_id', referencedColumnName: 'id' }])
   producer!: Producer;
-
-  @Column()
-  producer_id!: number;
 
   @Column()
   name!: string;

@@ -39,7 +39,7 @@ export class HarvestController {
   }
 
   async getHaverstWithCultivatesAndFarmsById(req: Request, res: Response) {
-    const harvest = await this.harvestService.findHaverstWithCultivatesAndFarmsById(Number(req.params.harvestId));
+    const harvest = await this.harvestService.findByIdWithFarmAndCultivates(Number(req.params.harvestId));
     return res.json(harvest);
    }
 }

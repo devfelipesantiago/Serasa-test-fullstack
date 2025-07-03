@@ -49,34 +49,19 @@ export class ProducerService {
     return this.repo.findByDocument(document);
   }
 
-  async findWithFarms(id: number): Promise<Producer | null> {
-    return this.repo.findWithFarms(id);
+  async findWithFarm(id: number): Promise<Producer | null> {
+    return this.repo.findByIdWithFarms(id);
   }
 
   async findFarmsByProducerId(producerId: number) {
-    return this.repo.findWithFarms(producerId);
+    return this.repo.findByIdWithFarms(producerId);
   }
 
   async findHarvestsByProducerId(producerId: number) {
-    const producer = await this.repo.findWithFarms(producerId);
-    const farmIds = producer?.farms?.map(farm => farm.id) ?? [];
 
-    if (farmIds.length === 0) return [];
-    
-    return this.harvestRepo.listByFarmId(farmIds);
   }
 
   async findCultivatesByProducerId(producerId: number) {
-    const producer = await this.repo.findWithFarms(producerId);
-    const farmIds = producer?.farms?.map(farm => farm.id) ?? [];
 
-    if (farmIds.length === 0) return [];
-
-    const harvests = await this.harvestRepo.listByFarmId(farmIds);
-    const harvestIds = harvests.map(h => h.id);
-
-    if (harvestIds?.length === 0) return [];
-
-    return this.cultivateRepo.listByHarvestIds(harvestIds);
   }
 }

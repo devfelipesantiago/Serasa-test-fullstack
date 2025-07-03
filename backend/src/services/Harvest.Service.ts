@@ -1,6 +1,7 @@
 import { IHarvestRepository } from '../model/repositories/interfaces/HarvestRepository.Interface';
 import { ICultivateRepository } from '../model/repositories/interfaces/CultivateRepository.Interface';
 import { Harvest } from '../model/entities/Harvest.entity';
+import { Cultivate } from '../model/entities/Cultivate.entity';
 
 export class HarvestService {
   constructor(
@@ -34,15 +35,15 @@ export class HarvestService {
     return this.repo.listByFarmId(farmId);
   }
 
-  async findWithCultivates(id: number): Promise<Harvest[] | null> {
-    return this.repo.findWithCultivates(id);
+  async findWithCultivates(id: number): Promise<Cultivate[] | null> {
+    return this.cultivateRepo.listByHarvestId(id);
   }
 
   async findCultivatesByHarvestId(harvestId: number) {
-    return this.cultivateRepo.listByHarvestIds(harvestId);
+    return this.cultivateRepo.listByHarvestId(harvestId);
   }
 
-  async findHaverstWithCultivatesAndFarmsById(harvestId: number) {
-    return this.repo.findHaverstWithCultivatesAndFarms(harvestId);
+  async findByIdWithFarmAndCultivates(harvestId: number) {
+    return this.repo.findByIdWithFarmAndCultivates(harvestId);
   }
 }

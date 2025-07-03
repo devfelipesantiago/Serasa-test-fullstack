@@ -9,13 +9,13 @@ export class Cultivate {
   @Column()
   name!: string;
 
+  @Column()
+  harvest_id!: number;
+
   @ManyToOne(() => Harvest, harvest => harvest.cultivates, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'harvest_id', referencedColumnName: 'id' },
   ])
   harvest!: Harvest;
-
-  @Column()
-  harvest_id!: number;
 
   @CreateDateColumn({ name: "created_at" })
   created_at!: Date;
