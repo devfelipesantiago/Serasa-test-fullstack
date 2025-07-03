@@ -1,8 +1,8 @@
 import { AppDataSource } from '../model/database/config';
-import { Producer } from '../model/entities/Producer.entity';
-import { Farm } from '../model/entities/Farm.entity';
-import { Harvest } from '../model/entities/Harvest.entity';
-import { Cultivate } from '../model/entities/Cultivate.entity';
+import { Producer } from '../model/entities/producer.entity';
+import { Farm } from '../model/entities/farm.entity';
+import { Harvest } from '../model/entities/harvest.entity';
+import { Cultivate } from '../model/entities/cultivate.entity';
 
 async function seed() {
   await AppDataSource.initialize();
@@ -17,18 +17,18 @@ async function seed() {
     name: 'Fazenda Primavera',
     city: 'Uberlândia',
     state: 'MG',
-    total_area: 100,
-    arable_area: 60,
-    vegetation_area: 40,
+    totalArea: 100,
+    arableArea: 60,
+    vegetationArea: 40,
     producer: producer1
   });
   const farm2 = farmRepo.create({
     name: 'Fazenda Sol Nascente',
     city: 'Ribeirão Preto',
     state: 'SP',
-    total_area: 200,
-    arable_area: 120,
-    vegetation_area: 80,
+    totalArea: 200,
+    arableArea: 120,
+    vegetationArea: 80,
     producer: producer2
   });
   await farmRepo.save([farm1, farm2]);
