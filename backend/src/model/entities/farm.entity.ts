@@ -1,15 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, OneToMany, JoinColumn } from "typeorm";
-import { Producer } from "./Producer.entity";
-import { Harvest } from "./Harvest.entity";
+import { Producer } from "./producer.entity";
+import { Harvest } from "./harvest.entity";
 
 @Entity("farms")
 export class Farm {
   @PrimaryGeneratedColumn()
   id!: number;
   
-  @Column()
-  producer_id!: number;
-
   @ManyToOne(() => Producer, producer => producer.farms, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'producer_id', referencedColumnName: 'id' }])
   producer!: Producer;
@@ -23,14 +20,14 @@ export class Farm {
   @Column({ length: 2, nullable: true })
   state?: string;
 
-  @Column("decimal")
-  total_area!: number;
+  @Column("decimal", { name: 'total_area' })
+  totalArea!: number;
 
-  @Column("decimal")
-  arable_area!: number;
+  @Column("decimal", { name: 'arable_area' })
+  arableArea!: number;
 
-  @Column("decimal")
-  vegetation_area!: number;
+  @Column("decimal", { name: 'vegetation_area' })
+  vegetationArea!: number;
 
   @OneToMany(() => Harvest, harvest => harvest.farm)
   harvests!: Harvest[];

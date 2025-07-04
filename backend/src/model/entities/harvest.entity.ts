@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, OneToMany, JoinColumn } from "typeorm";
-import { Farm } from "./Farm.entity";
-import { Cultivate } from "./Cultivate.entity";
+import { Farm } from "./farm.entity";
+import { Cultivate } from "./cultivate.entity";
 
 @Entity("harvests")
 export class Harvest {
@@ -9,9 +9,6 @@ export class Harvest {
 
   @Column()
   year!: number;
-
-  @Column()
-  farm_id!: number;
 
   @ManyToOne(() => Farm, farm => farm.harvests, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'farm_id', referencedColumnName: 'id' }])

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from "typeorm";
-import { Farm } from "./Farm.entity";
+import { Farm } from "./farm.entity";
 
 @Entity("producers")
 export class Producer {
@@ -9,7 +9,7 @@ export class Producer {
   @Column()
   name!: string;
 
-  @Column({ unique: true})
+  @Column({ unique: true })
   document!: string;
 
   @OneToMany(() => Farm, farm => farm.producer)

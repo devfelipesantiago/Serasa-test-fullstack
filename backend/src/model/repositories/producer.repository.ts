@@ -1,5 +1,5 @@
-import { IProducerRepository } from './interfaces/ProducerRepository.Interface';
-import { Producer } from '../entities/Producer.entity';
+import { IProducerRepository } from './interfaces/producer-repository.interface';
+import { Producer } from '../entities/producer.entity';
 import { AppDataSource } from '../database/config';
 
 export class ProducerRepository implements IProducerRepository {
@@ -12,20 +12,22 @@ export class ProducerRepository implements IProducerRepository {
   async findAll(): Promise<Producer[]> {
     return this.repo.find();
   }
-  async findById(id: number): Promise<Producer | null> {
+  async findById(id: number, relations?: string[]): Promise<Producer | null> {
+    if (relations) {
+      return this.repo.findOne({ where: { id }, relations });
+    }
     return this.repo.findOneBy({ id });
   }
   async update(id: number, data: Partial<Producer>): Promise<Producer | null> {
-    await this.repo.update(id, data);
-    return this.findById(id);
+    const producer = await this.findById(id);
+    if (!producer) return null;
+    const updatedProducer = this.repo.merge(producer, data);
+    return this.repo.save(updatedProducer);
   }
   async delete(id: number): Promise<void> {
     await this.repo.delete(id);
   }
   async findByDocument(document: string): Promise<Producer | null> {
     return this.repo.findOneBy({ document });
-  }
-  async findByIdWithFarms(id: number): Promise<Producer | null> {
-    return this.repo.findOne({ where: { id }, relations: ['farms'] });
   }
 } 

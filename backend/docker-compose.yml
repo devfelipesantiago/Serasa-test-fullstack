@@ -7,8 +7,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: test
       MYSQL_DATABASE: serasa
-      # MYSQL_USER: root  # Remova ou defina um usuário diferente
-      # MYSQL_PASSWORD: test
       TZ: America/Sao_Paulo
     ports:
       - "3306:3306"

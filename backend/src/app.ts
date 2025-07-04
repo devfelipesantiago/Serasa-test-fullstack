@@ -1,11 +1,14 @@
 import express from 'express';
 import './model/database/config';
-import router from './routers';
+import { mainRouter } from './routers';
 import { errorHandler } from './middlewares/errorHandler';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './docs/swagger';
 
 const app = express();
 app.use(express.json());
-app.use(router);
+app.use(mainRouter());
 app.use(errorHandler);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 export default app;

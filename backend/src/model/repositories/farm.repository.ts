@@ -1,5 +1,5 @@
-import { IFarmRepository } from './interfaces/FarmRepository.Interface';
-import { Farm } from '../entities/Farm.entity';
+import { IFarmRepository } from './interfaces/farm-repository.interface';
+import { Farm } from '../entities/farm.entity';
 import { AppDataSource } from '../database/config';
 
 export class FarmRepository implements IFarmRepository {
@@ -12,12 +12,17 @@ export class FarmRepository implements IFarmRepository {
   async findAll(): Promise<Farm[]> {
     return this.repo.find();
   }
-  async findById(id: number): Promise<Farm | null> {
+  async findById(id: number, relations?: string[]): Promise<Farm | null> {
+    if (relations) {
+      return this.repo.findOne({ where: { id }, relations });
+    }
     return this.repo.findOneBy({ id });
   }
   async update(id: number, data: Partial<Farm>): Promise<Farm | null> {
-    await this.repo.update(id, data);
-    return this.findById(id);
+    const farm = await this.findById(id);
+    if (!farm) return null;
+    const updatedFarm = this.repo.merge(farm, data);
+    return this.repo.save(updatedFarm);
   }
   async delete(id: number): Promise<void> {
     await this.repo.delete(id);
@@ -26,9 +31,6 @@ export class FarmRepository implements IFarmRepository {
     return this.repo.find({ where: { state } });
   }
   async listByProducerId(producerId: number): Promise<Farm[]> {
-    return this.repo.find({ where: { producer_id: producerId } });
-  }
-  async findByIdWithHarvestsAndProducer(id: number): Promise<Farm | null> {
-    return this.repo.findOne({ where: { id }, relations: ['harvests', 'producer'] });
+    return this.repo.find({ where: { producer: { id: producerId } } });
   }
 } 

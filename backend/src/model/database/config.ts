@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { DataSource } from "typeorm";
-import { Producer } from "../entities/Producer.entity";
-import { Farm } from "../entities/Farm.entity";
-import { Harvest } from "../entities/Harvest.entity";
-import { Cultivate } from "../entities/Cultivate.entity";
+import { Producer } from "../entities/producer.entity";
+import { Farm } from "../entities/farm.entity";
+import { Harvest } from "../entities/harvest.entity";
+import { Cultivate } from "../entities/cultivate.entity";
 import * as dotenv from "dotenv";
 
 dotenv.config();
