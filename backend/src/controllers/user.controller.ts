@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { UserService } from '../services/user.service';
 import { UserRole } from '../model/entities/user.entity';
+import { UserResponseDto } from '../dtos/user.dto';
 
 /**
  * @swagger
@@ -33,7 +34,8 @@ export class UserController {
    */
   async create(req: Request, res: Response) {
     const result = await this.userService.create(req.body);
-    return res.status(201).json(result);
+    const { password, ...userWithoutPassword } = result;
+    return res.status(201).json(userWithoutPassword);
   }
 
   /**
@@ -85,7 +87,16 @@ export class UserController {
       role = req.query.role as UserRole;
     }
     const result = await this.userService.findAll(page, limit, role);
-    return res.status(200).json(result);
+
+    const usersWithoutPassword = result.data.map(user => {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    });
+
+    return res.status(200).json({
+      ...result,
+      data: usersWithoutPassword
+    });
   }
 
   /**
@@ -111,7 +122,12 @@ export class UserController {
    */
   async findById(req: Request, res: Response) {
     const result = await this.userService.findById(Number(req.params.id));
-    return res.status(200).json(result);
+    if (!result) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const { password, ...userWithoutPassword } = result;
+    return res.status(200).json(userWithoutPassword);
   }
 
   /**
@@ -143,7 +159,12 @@ export class UserController {
    */
   async update(req: Request, res: Response) {
     const result = await this.userService.update(Number(req.params.id), req.body);
-    return res.status(200).json(result);
+    if (!result) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const { password, ...userWithoutPassword } = result;
+    return res.status(200).json(userWithoutPassword);
   }
 
   /**
