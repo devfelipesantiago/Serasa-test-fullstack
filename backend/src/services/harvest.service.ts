@@ -2,7 +2,7 @@ import { IHarvestRepository } from '../model/repositories/interfaces/harvest-rep
 import { Harvest } from '../model/entities/harvest.entity';
 import { CultivateService } from './cultivate.service';
 import { Farm } from '../model/entities/farm.entity';
-import { ApiResponse } from '../utils/responseHandler';
+import { ApiResponse } from '../utils/responseHandler.utils';
 
 export class HarvestService {
   constructor(
@@ -19,12 +19,17 @@ export class HarvestService {
     };
   }
 
-  async findAll(): Promise<ApiResponse<Harvest[]>> {
-    const harvests = await this.repo.findAll();
+  async findAll(page = 1, limit = 20): Promise<ApiResponse<Harvest[]>> {
+    const offset = (page - 1) * limit;
+    const repo = (this.repo as any).repo || this.repo;
+    const [harvests, total] = await repo.createQueryBuilder('harvest')
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
     return {
       success: true,
       data: harvests,
-      message: 'Harvests retrieved successfully'
+      message: `Harvests retrieved successfully (page ${page}, total ${total})`
     };
   }
 

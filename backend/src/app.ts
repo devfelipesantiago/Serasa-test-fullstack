@@ -1,7 +1,7 @@
 import express from 'express';
 import './model/database/config';
 import { mainRouter } from './routers';
-import { errorHandler } from './middlewares/errorHandler';
+import { errorHandler } from './middlewares/errorHandler.middleware';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './docs/swagger';
 

@@ -223,7 +223,9 @@ export class FarmController {
   }
 
   async findAll(req: Request, res: Response) {
-    const result = await this.farmService.findAll();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const result = await this.farmService.findAll(page, limit);
     return res.status(200).json(result);
   }
 

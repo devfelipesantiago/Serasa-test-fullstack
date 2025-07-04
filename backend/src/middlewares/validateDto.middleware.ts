@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-import { ResponseHandler } from '../utils/responseHandler';
+import { ResponseHandler } from '../utils/responseHandler.utils';
 
 export const validateDto = (dtoClass: any) => {
   return async (req: Request, res: Response, next: NextFunction) => {

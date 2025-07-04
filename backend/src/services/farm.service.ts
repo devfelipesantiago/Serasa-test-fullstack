@@ -4,7 +4,7 @@ import { Cultivate } from '../model/entities/cultivate.entity';
 import { Producer } from '../model/entities/producer.entity';
 import { CultivateService } from './cultivate.service';
 import { HarvestService } from './harvest.service';
-import { ApiResponse } from '../utils/responseHandler';
+import { ApiResponse } from '../utils/responseHandler.utils';
 
 export class FarmService {
   constructor(
@@ -25,12 +25,17 @@ export class FarmService {
     };
   }
 
-  async findAll(): Promise<ApiResponse<Farm[]>> {
-    const farms = await this.repo.findAll();
+  async findAll(page = 1, limit = 20): Promise<ApiResponse<Farm[]>> {
+    const offset = (page - 1) * limit;
+    const repo = (this.repo as any).repo || this.repo;
+    const [farms, total] = await repo.createQueryBuilder('farm')
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
     return {
       success: true,
       data: farms,
-      message: 'Farms retrieved successfully'
+      message: `Farms retrieved successfully (page ${page}, total ${total})`
     };
   }
 
