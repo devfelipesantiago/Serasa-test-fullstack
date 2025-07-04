@@ -1,11 +1,11 @@
 import { IProducerRepository } from '../model/repositories/interfaces/producer-repository.interface';
 import { Producer } from '../model/entities/producer.entity';
-import { isValidCnpj, isValidCpf } from '../utils/validDocument.Utils';
+import { isValidCnpj, isValidCpf } from '../utils/validDocument.utils';
 import { FarmService } from './farm.service';
 import { HarvestService } from './harvest.service';
 import { CultivateService } from './cultivate.service';
 import { Cultivate } from '../model/entities/cultivate.entity';
-import { ApiResponse } from '../utils/responseHandler';
+import { ApiResponse } from '../utils/responseHandler.utils';
 
 export class ProducerService {
   constructor(
@@ -36,12 +36,18 @@ export class ProducerService {
     };
   }
 
-  async findAll(): Promise<ApiResponse<Producer[]>> {
-    const producers = await this.repo.findAll();
+  async findAll(page = 1, limit = 20): Promise<ApiResponse<Producer[]>> {
+    const offset = (page - 1) * limit;
+
+    const repo = (this.repo as any).repo || this.repo;
+    const [producers, total] = await repo.createQueryBuilder('producer')
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
     return {
       success: true,
       data: producers,
-      message: 'Producers retrieved successfully'
+      message: `Producers retrieved successfully (page ${page}, total ${total})`
     };
   }
 

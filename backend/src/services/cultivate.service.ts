@@ -1,6 +1,6 @@
 import { ICultivateRepository } from '../model/repositories/interfaces/cultivate-repository.interface'
 import { Cultivate } from '../model/entities/cultivate.entity';
-import { ApiResponse } from '../utils/responseHandler';
+import { ApiResponse } from '../utils/responseHandler.utils';
 
 export class CultivateService {
   constructor(private repo: ICultivateRepository) { }
@@ -14,12 +14,17 @@ export class CultivateService {
     };
   }
 
-  async findAll(): Promise<ApiResponse<Cultivate[]>> {
-    const cultivates = await this.repo.findAll();
+  async findAll(page = 1, limit = 20): Promise<ApiResponse<Cultivate[]>> {
+    const offset = (page - 1) * limit;
+    const repo = (this.repo as any).repo || this.repo;
+    const [cultivates, total] = await repo.createQueryBuilder('cultivate')
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
     return {
       success: true,
       data: cultivates,
-      message: 'Cultivates retrieved successfully'
+      message: `Cultivates retrieved successfully (page ${page}, total ${total})`
     };
   }
 
