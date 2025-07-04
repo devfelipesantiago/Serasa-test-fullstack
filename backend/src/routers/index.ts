@@ -3,6 +3,7 @@ import { producerRouter } from './producer.routes';
 import { farmRouter } from './farm.routes';
 import { harvestRouter } from './harvest.routes';
 import { cultivateRouter } from './cultivate.routes';
+import { userRoutes } from './user.routes';
 
 import { FarmRepository } from '../model/repositories/farm.repository';
 import { HarvestRepository } from '../model/repositories/harvest.repository';
@@ -27,6 +28,7 @@ export const mainRouter = () => {
   router.use('/farms', farmRouter(harvestService, cultivateService));
   router.use('/harvests', harvestRouter(cultivateService));
   router.use('/cultivates', cultivateRouter());
+  router.use('/users', userRoutes);
 
   return router;
 }
