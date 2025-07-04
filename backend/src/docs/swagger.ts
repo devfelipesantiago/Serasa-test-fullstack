@@ -56,6 +56,36 @@ const options: swaggerJSDoc.Options = {
             name: { type: 'string', example: 'Soja' },
             created_at: { type: 'string', format: 'date-time' }
           }
+        },
+        User: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            name: { type: 'string', example: 'Maria Cliente' },
+            email: { type: 'string', example: 'maria@email.com' },
+            role: { type: 'string', enum: ['CLIENT', 'PARTNER', 'ADMIN'], example: 'CLIENT' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' }
+          }
+        },
+        CreateUserDto: {
+          type: 'object',
+          required: ['name', 'email', 'password'],
+          properties: {
+            name: { type: 'string', example: 'Maria Cliente' },
+            email: { type: 'string', example: 'maria@email.com' },
+            password: { type: 'string', example: 'senhaSegura123' },
+            role: { type: 'string', enum: ['CLIENT', 'PARTNER', 'ADMIN'], example: 'CLIENT' }
+          }
+        },
+        UpdateUserDto: {
+          type: 'object',
+          properties: {
+            name: { type: 'string', example: 'Maria Cliente' },
+            email: { type: 'string', example: 'maria@email.com' },
+            password: { type: 'string', example: 'novaSenha123' },
+            role: { type: 'string', enum: ['CLIENT', 'PARTNER', 'ADMIN'], example: 'PARTNER' }
+          }
         }
       }
     }
