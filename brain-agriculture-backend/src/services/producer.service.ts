@@ -22,14 +22,17 @@ export class ProducerService {
     if (!document) {
       throw new Error('Document is required.');
     }
+
     const newDocument = document.replace(/\D/g, '');
     if (!(isValidCpf(newDocument) || isValidCnpj(newDocument))) {
       throw new Error('Document is invalid.');
     }
+
     const existing = await this.repo.findByDocument(document);
     if (existing) {
       throw new Error('Producer already exists!');
     }
+
     const producer = await this.repo.create(data);
     return {
       success: true,

@@ -126,36 +126,36 @@ export const FarmForm: React.FC<FarmFormProps> = ({ producerId, onClose, farmToE
       <h3>{isEditMode ? 'Editar Fazenda' : 'Nova Fazenda'}</h3>
       <FormGrid>
         <FormGroup>
-          <Label>Nome da Fazenda</Label>
-          <Input name="name" value={formState.name} onChange={handleChange} required />
+          <Label htmlFor="farmName">Nome da Fazenda</Label>
+          <Input id="farmName" name="name" value={formState.name} onChange={handleChange} required />
         </FormGroup>
         <FormGroup>
-          <Label>Cidade</Label>
-          <Input name="city" value={formState.city} onChange={handleChange} required />
+          <Label htmlFor="farmCity">Cidade</Label>
+          <Input id="farmCity" name="city" value={formState.city} onChange={handleChange} required />
         </FormGroup>
         <FormGroup>
-          <Label>Estado</Label>
-          <Input name="state" value={formState.state} onChange={handleChange} required />
+          <Label htmlFor="farmState">Estado</Label>
+          <Input id="farmState" name="state" value={formState.state} onChange={handleChange} required />
         </FormGroup>
         <FormGroup>
-          <Label>Área Total (ha)</Label>
-          <Input name="totalAreaHectares" value={formState.totalAreaHectares} onChange={handleChange} type="number" required />
+          <Label htmlFor="totalAreaHectares">Área Total (ha)</Label>
+          <Input id="totalAreaHectares" name="totalAreaHectares" value={formState.totalAreaHectares} onChange={handleChange} type="number" required />
         </FormGroup>
         <FormGroup>
-          <Label>Área Agricultável (ha)</Label>
-          <Input name="arableAreaHectares" value={formState.arableAreaHectares} onChange={handleChange} type="number" required />
+          <Label htmlFor="arableAreaHectares">Área Agricultável (ha)</Label>
+          <Input id="arableAreaHectares" name="arableAreaHectares" value={formState.arableAreaHectares} onChange={handleChange} type="number" required />
         </FormGroup>
         <FormGroup>
-          <Label>Área de Vegetação (ha)</Label>
-          <Input name="vegetationAreaHectares" value={formState.vegetationAreaHectares} onChange={handleChange} type="number" required />
+          <Label htmlFor="vegetationAreaHectares">Área de Vegetação (ha)</Label>
+          <Input id="vegetationAreaHectares" name="vegetationAreaHectares" value={formState.vegetationAreaHectares} onChange={handleChange} type="number" required />
         </FormGroup>
       </FormGrid>
       {areaError && <p style={{ color: 'red', gridColumn: '1 / -1' }}>{areaError}</p>}
 
       <CultureManager>
-        <Label>Culturas</Label>
+        <Label htmlFor="cultureInput">Culturas</Label>
         <CultureInputGroup>
-          <Input value={currentCulture} onChange={(e) => setCurrentCulture(e.target.value)} placeholder="Ex: Soja" />
+          <Input id="cultureInput" value={currentCulture} onChange={(e) => setCurrentCulture(e.target.value)} placeholder="Ex: Soja" />
           <button type="button" onClick={handleAddCulture}>Adicionar</button>
         </CultureInputGroup>
         <CultureList>
