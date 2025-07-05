@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUpdateProducerMutation } from '../api/apiSlice';
 import { useNavigate } from 'react-router-dom';
 import type { Producer } from '../types/Producer';
+import { StyledForm, FormGroup, Label, Input, FormActions } from './FormComponents';
 
 interface EditProducerFormProps {
   producer: Producer;
@@ -31,29 +32,31 @@ export const EditProducerForm: React.FC<EditProducerFormProps> = ({ producer }) 
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <StyledForm onSubmit={handleSubmit}>
       <h2>Editar Produtor</h2>
-      <div>
-        <label htmlFor="producerName">Nome:</label>
-        <input
+      <FormGroup>
+        <Label htmlFor="producerName">Nome:</Label>
+        <Input
           type="text"
           id="producerName"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-      </div>
-      <div>
-        <label htmlFor="producerDocument">CPF ou CNPJ:</label>
-        <input
+      </FormGroup>
+      <FormGroup>
+        <Label htmlFor="producerDocument">CPF ou CNPJ:</Label>
+        <Input
           type="text"
           id="producerDocument"
           value={document}
           onChange={(e) => setDocument(e.target.value)}
         />
-      </div>
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? 'Atualizando...' : 'Salvar Alterações'}
-      </button>
-    </form>
+      </FormGroup>
+      <FormActions>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Atualizando...' : 'Salvar Alterações'}
+        </button>
+      </FormActions>
+    </StyledForm>
   );
 };
