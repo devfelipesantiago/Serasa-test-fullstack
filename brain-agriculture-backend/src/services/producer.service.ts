@@ -44,15 +44,17 @@ export class ProducerService {
   async findAll(page = 1, limit = 20): Promise<ApiResponse<Producer[]>> {
     const offset = (page - 1) * limit;
 
-    const repo = (this.repo as any).repo || this.repo;
-    const [producers, total] = await repo.createQueryBuilder('producer')
-      .skip(offset)
-      .take(limit)
-      .getManyAndCount();
+    const [producers, total] = await this.repo.findAll({
+      skip: offset,
+      take: limit,
+    });
+
+    const totalPages = Math.ceil(total / limit);
+
     return {
       success: true,
       data: producers,
-      message: `Producers retrieved successfully (page ${page}, total ${total})`
+      message: 'Producers retrieved successfully',
     };
   }
 
