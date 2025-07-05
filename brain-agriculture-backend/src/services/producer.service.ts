@@ -6,6 +6,8 @@ import { HarvestService } from './harvest.service';
 import { CultivateService } from './cultivate.service';
 import { Cultivate } from '../model/entities/cultivate.entity';
 import { ApiResponse } from '../utils/responseHandler.utils';
+import { DashboardDataDto } from '../dtos/DashboardDataDto';
+import { Farm } from '../model/entities/farm.entity';
 
 export class ProducerService {
   constructor(
@@ -20,14 +22,17 @@ export class ProducerService {
     if (!document) {
       throw new Error('Document is required.');
     }
+
     const newDocument = document.replace(/\D/g, '');
     if (!(isValidCpf(newDocument) || isValidCnpj(newDocument))) {
       throw new Error('Document is invalid.');
     }
+
     const existing = await this.repo.findByDocument(document);
     if (existing) {
       throw new Error('Producer already exists!');
     }
+
     const producer = await this.repo.create(data);
     return {
       success: true,
@@ -157,6 +162,49 @@ export class ProducerService {
       success: true,
       data: cultivates,
       message: 'Cultivates retrieved successfully'
+    };
+  }
+
+  async getDashboardData(): Promise<ApiResponse<DashboardDataDto>> {
+    const farmsResponse = await this.farmService.findAll();
+    const cultivatesResponse = await this.cultivateService.findAll();
+
+    const allFarms = farmsResponse.data;
+    const allCultivates = cultivatesResponse.data;
+
+    const totalFarms = (allFarms ?? []).length;
+    const totalArea = (allFarms ?? []).reduce((sum: number, farm: Farm) => sum + Number(farm.totalArea), 0);
+
+    const stateDistribution = (allFarms ?? []).reduce((acc: Record<string, number>, farm: Farm) => {
+      const state = farm.state ?? 'Empty';
+      acc[state] = (acc[state] || 0) + 1;
+      return acc;
+    }, {});
+
+    const landUse = (allFarms ?? []).reduce((acc: { arableArea: number; vegetationArea: number }, farm: Farm) => {
+      acc.arableArea += Number(farm.arableArea);
+      acc.vegetationArea += Number(farm.vegetationArea);
+      return acc;
+    }, { arableArea: 0, vegetationArea: 0 });
+
+    const cultureDistribution = (allCultivates ?? []).reduce((acc: Record<string, number>, cultivate: Cultivate) => {
+      const cultureName = cultivate.name;
+      acc[cultureName] = (acc[cultureName] || 0) + 1;
+      return acc;
+    }, {});
+
+    const dashboardData: DashboardDataDto = {
+      totalFarms,
+      totalArea,
+      stateDistribution,
+      cultureDistribution,
+      landUse,
+    };
+
+    return {
+      success: true,
+      data: dashboardData,
+      message: 'Dashboard data retrieved successfully'
     };
   }
 }
