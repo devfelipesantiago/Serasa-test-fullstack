@@ -17,8 +17,8 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASS || 'test',
   database: process.env.DB_NAME || 'serasa',
   entities: [Producer, Farm, Harvest, Cultivate, User],
-  synchronize: process.env.NODE_ENV === 'development',
-  logging: process.env.NODE_ENV === 'development',
+  synchronize: true,
+  logging: true
 });
 
 AppDataSource.initialize()
