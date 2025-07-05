@@ -4,19 +4,19 @@ import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+interface ChartDataset {
+  label: string;
+  data: number[];
+  backgroundColor: string[];
+  borderColor: string[];
+  borderWidth: number;
+}
+
 interface PieChartProps {
   title: string;
   data: {
     labels: string[];
-    datasets: [
-      {
-        label: string;
-        data: number[];
-        backgroundColor: string[];
-        borderColor: string[];
-        borderWidth: number;
-      }
-    ];
+    datasets: ChartDataset[];
   };
 }
 

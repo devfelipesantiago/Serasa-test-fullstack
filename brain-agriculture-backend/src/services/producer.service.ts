@@ -168,30 +168,23 @@ export class ProducerService {
 
     const allFarms = farmsResponse.data;
     const allCultivates = cultivatesResponse.data;
-    if (!allFarms || !allCultivates) {
-      return {
-        success: false,
-        data: null,
-        message: 'No data available for dashboard'
-      };
-    }
-    const totalFarms = allFarms.length;
-    const totalArea = (allFarms ?? []).reduce((sum: number, farm: Farm) => sum + farm.totalArea, 0);
 
-    const stateDistribution = allFarms.reduce((acc: Record<string, number>, farm: Farm) => {
-      if (farm.state) {
-        acc[farm.state] = (acc[farm.state] || 0) + 1;
-      }
+    const totalFarms = (allFarms ?? []).length;
+    const totalArea = (allFarms ?? []).reduce((sum: number, farm: Farm) => sum + Number(farm.totalArea), 0);
+
+    const stateDistribution = (allFarms ?? []).reduce((acc: Record<string, number>, farm: Farm) => {
+      const state = farm.state ?? 'Empty';
+      acc[state] = (acc[state] || 0) + 1;
       return acc;
     }, {});
 
-    const landUse = allFarms.reduce((acc: { arableArea: number; vegetationArea: number }, farm: Farm) => {
-      acc.arableArea += farm.arableArea;
-      acc.vegetationArea += farm.vegetationArea;
+    const landUse = (allFarms ?? []).reduce((acc: { arableArea: number; vegetationArea: number }, farm: Farm) => {
+      acc.arableArea += Number(farm.arableArea);
+      acc.vegetationArea += Number(farm.vegetationArea);
       return acc;
     }, { arableArea: 0, vegetationArea: 0 });
 
-    const cultureDistribution = allCultivates.reduce((acc: Record<string, number>, cultivate: Cultivate) => {
+    const cultureDistribution = (allCultivates ?? []).reduce((acc: Record<string, number>, cultivate: Cultivate) => {
       const cultureName = cultivate.name;
       acc[cultureName] = (acc[cultureName] || 0) + 1;
       return acc;

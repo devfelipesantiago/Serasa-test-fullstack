@@ -23,7 +23,7 @@ export const apiSlice = createApi({
       providesTags: (result, error, arg) => [{ type: 'Producer', id: arg }],
     }),
     getDashboard: builder.query<DashboardData, void>({
-      query: () => '/dashboard',
+      query: () => '/producers/dashboard',
       transformResponse: (response: ApiResponse<DashboardData>) => response.data,
       providesTags: ['Dashboard'],
     }),
