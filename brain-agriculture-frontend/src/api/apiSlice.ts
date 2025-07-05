@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { Producer } from '../types/Producer';
+import type { Farm } from '../types/Farm';
 import type { DashboardData } from '../types/Dashboard';
 import type { ApiResponse } from '../types/ApiResponse';
 
@@ -49,6 +50,29 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: (result, error, arg) => [{ type: 'Producer', id: arg }, 'Dashboard'],
     }),
+    addFarm: builder.mutation<Farm, { producerId: string; farmData: Partial<Farm> }>({
+      query: ({ producerId, farmData }) => ({
+        url: `/producers/${producerId}/farms`,
+        method: 'POST',
+        body: farmData,
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: 'Producer', id: arg.producerId }, 'Dashboard'],
+    }),
+    updateFarm: builder.mutation<Farm, { producerId: string; farmId: string; farmData: Partial<Farm> }>({
+      query: ({ producerId, farmId, farmData }) => ({
+        url: `/producers/${producerId}/farms/${farmId}`,
+        method: 'PUT',
+        body: farmData,
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: 'Producer', id: arg.producerId }, 'Dashboard'],
+    }),
+    deleteFarm: builder.mutation<{ success: boolean; id: string }, { producerId: string; farmId: string }>({
+      query: ({ producerId, farmId }) => ({
+        url: `/producers/${producerId}/farms/${farmId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: 'Producer', id: arg.producerId }, 'Dashboard'],
+    }),
   }),
 });
 
@@ -59,4 +83,7 @@ export const {
   useAddProducerMutation,
   useUpdateProducerMutation,
   useDeleteProducerMutation,
+  useAddFarmMutation,
+  useUpdateFarmMutation,
+  useDeleteFarmMutation,
 } = apiSlice;
