@@ -8,6 +8,7 @@ import { Layout } from './components/Layout.tsx';
 import { DashboardPage } from './pages/DashboardPage.tsx';
 import { ProducersPage } from './pages/ProducersPage.tsx';
 import { AddProducerPage } from './pages/AddProducerPage.tsx';
+import { EditProducerPage } from './pages/EditProducerPage.tsx';
 import './index.css';
 
 const router = createBrowserRouter([
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: 'producers/new',
         element: <AddProducerPage />,
+      },
+      {
+        path: 'producers/edit/:producerId',
+        element: <EditProducerPage />,
       },
     ],
   },
