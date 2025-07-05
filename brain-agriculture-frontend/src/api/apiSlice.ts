@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { ApiResponse } from '../types/ApiResponse';
-import type { DashboardData } from '../types/Dashboard';
 import type { Producer } from '../types/Producer';
+import type { DashboardData } from '../types/Dashboard';
+import type { ApiResponse } from '../types/ApiResponse';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
@@ -10,20 +10,27 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     getProducers: builder.query<Producer[], void>({
       query: () => '/producers',
-
-      transformResponse: (response: ApiResponse<Producer[]>) => {
-        return response.data;
-      },
+      transformResponse: (response: ApiResponse<Producer[]>) => response.data,
       providesTags: ['Producer'],
     }),
     getDashboard: builder.query<DashboardData, void>({
       query: () => '/dashboard',
-      transformResponse: (response: ApiResponse<DashboardData>) => {
-        return response.data;
-      },
+      transformResponse: (response: ApiResponse<DashboardData>) => response.data,
       providesTags: ['Dashboard'],
+    }),
+    addProducer: builder.mutation<Producer, Partial<Producer>>({
+      query: (body) => ({
+        url: '/producers',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Producer', 'Dashboard'],
     }),
   }),
 });
 
-export const { useGetProducersQuery, useGetDashboardQuery } = apiSlice;
+export const {
+  useGetProducersQuery,
+  useGetDashboardQuery,
+  useAddProducerMutation,
+} = apiSlice;

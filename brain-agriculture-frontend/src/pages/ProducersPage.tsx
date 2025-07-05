@@ -19,7 +19,7 @@ export const ProducersPage: React.FC = () => {
       <ul>
         {producers.map((producer) => (
           <li key={producer.id}>
-            {producer.name} - ({producer.cpfCnpj})
+            {producer.name} - ({producer.document})
           </li>
         ))}
       </ul>
