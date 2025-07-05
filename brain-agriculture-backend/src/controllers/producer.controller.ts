@@ -279,4 +279,9 @@ export class ProducerController {
     const result = await this.producerService.findByDocument(req.params.document);
     return res.status(200).json(result);
   }
+
+  async getDashboardData(req: Request, res: Response) {
+    const result = await this.producerService.getDashboardData();
+    return res.status(200).json(result);
+  }
 }

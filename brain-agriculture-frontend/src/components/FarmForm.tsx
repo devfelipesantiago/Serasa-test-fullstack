@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAddFarmMutation } from '../api/apiSlice';
+import { useAddFarmMutation, useUpdateFarmMutation } from '../api/apiSlice';
 import type { Farm } from '../types/Farm';
 
 interface FarmFormProps {
@@ -8,20 +8,33 @@ interface FarmFormProps {
   farmToEdit?: Farm;
 }
 
+const initialState = {
+  name: '',
+  city: '',
+  state: '',
+  totalAreaHectares: 0,
+  arableAreaHectares: 0,
+  vegetationAreaHectares: 0,
+  cultures: [] as string[],
+};
+
 export const FarmForm: React.FC<FarmFormProps> = ({ producerId, onClose, farmToEdit }) => {
-  const [formState, setFormState] = useState({
-    name: '',
-    city: '',
-    state: '',
-    totalAreaHectares: 0,
-    arableAreaHectares: 0,
-    vegetationAreaHectares: 0,
-    cultures: [] as string[],
-  });
+  const [formState, setFormState] = useState(initialState);
   const [areaError, setAreaError] = useState('');
   const [currentCulture, setCurrentCulture] = useState('');
 
-  const [addFarm, { isLoading }] = useAddFarmMutation();
+  const [addFarm, { isLoading: isAdding }] = useAddFarmMutation();
+  const [updateFarm, { isLoading: isUpdating }] = useUpdateFarmMutation();
+  
+  const isEditMode = Boolean(farmToEdit);
+
+  useEffect(() => {
+    if (isEditMode && farmToEdit) {
+      setFormState(farmToEdit);
+    } else {
+      setFormState(initialState);
+    }
+  }, [farmToEdit, isEditMode]);
 
   useEffect(() => {
     const { totalAreaHectares, arableAreaHectares, vegetationAreaHectares } = formState;
@@ -30,8 +43,8 @@ export const FarmForm: React.FC<FarmFormProps> = ({ producerId, onClose, farmToE
     } else {
       setAreaError('');
     }
-  }, [formState.totalAreaHectares, formState.arableAreaHectares, formState.vegetationAreaHectares]);
-
+  }, [formState]);
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormState(prevState => ({
@@ -42,19 +55,13 @@ export const FarmForm: React.FC<FarmFormProps> = ({ producerId, onClose, farmToE
 
   const handleAddCulture = () => {
     if (currentCulture && !formState.cultures.includes(currentCulture)) {
-      setFormState(prevState => ({
-        ...prevState,
-        cultures: [...prevState.cultures, currentCulture],
-      }));
+      setFormState(prevState => ({ ...prevState, cultures: [...prevState.cultures, currentCulture] }));
       setCurrentCulture('');
     }
   };
 
   const handleRemoveCulture = (cultureToRemove: string) => {
-    setFormState(prevState => ({
-      ...prevState,
-      cultures: prevState.cultures.filter(culture => culture !== cultureToRemove),
-    }));
+    setFormState(prevState => ({ ...prevState, cultures: prevState.cultures.filter(c => c !== cultureToRemove) }));
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -63,18 +70,25 @@ export const FarmForm: React.FC<FarmFormProps> = ({ producerId, onClose, farmToE
       alert('Por favor, corrija os erros no formulário.');
       return;
     }
+
     try {
-      await addFarm({ producerId, farmData: formState }).unwrap();
+      if (isEditMode && farmToEdit) {
+        await updateFarm({ producerId, farmId: farmToEdit.id, farmData: formState }).unwrap();
+      } else {
+        await addFarm({ producerId, farmData: formState }).unwrap();
+      }
       onClose();
     } catch (err) {
       console.error('Falha ao salvar a fazenda: ', err);
     }
   };
+  
+  const isLoading = isAdding || isUpdating;
 
   return (
     <div style={{ border: '1px solid #007bff', padding: '16px', margin: '16px 0', borderRadius: '8px' }}>
       <form onSubmit={handleSubmit}>
-        <h3>Nova Fazenda</h3>
+        <h3>{isEditMode ? 'Editar Fazenda' : 'Nova Fazenda'}</h3>
         <input name="name" value={formState.name} onChange={handleChange} placeholder="Nome da Fazenda" required />
         <input name="city" value={formState.city} onChange={handleChange} placeholder="Cidade" required />
         <input name="state" value={formState.state} onChange={handleChange} placeholder="Estado" required />
@@ -82,7 +96,7 @@ export const FarmForm: React.FC<FarmFormProps> = ({ producerId, onClose, farmToE
         <input name="arableAreaHectares" value={formState.arableAreaHectares} onChange={handleChange} type="number" placeholder="Área Agricultável (ha)" required />
         <input name="vegetationAreaHectares" value={formState.vegetationAreaHectares} onChange={handleChange} type="number" placeholder="Área de Vegetação (ha)" required />
         {areaError && <p style={{ color: 'red' }}>{areaError}</p>}
-
+        
         <div>
           <h4>Culturas</h4>
           <input value={currentCulture} onChange={(e) => setCurrentCulture(e.target.value)} placeholder="Adicionar cultura" />
@@ -97,7 +111,7 @@ export const FarmForm: React.FC<FarmFormProps> = ({ producerId, onClose, farmToE
         </div>
 
         <button type="submit" disabled={!!areaError || isLoading}>
-          {isLoading ? 'Salvando...' : 'Salvar Fazenda'}
+          {isLoading ? 'Salvando...' : `Salvar ${isEditMode ? 'Alterações' : 'Fazenda'}`}
         </button>
         <button type="button" onClick={onClose} style={{ marginLeft: '8px' }}>Cancelar</button>
       </form>

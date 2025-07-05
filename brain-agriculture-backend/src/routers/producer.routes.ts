@@ -19,6 +19,7 @@ export const producerRouter = (
   const producerService = new ProducerService(producerRepository, farmService, harvestService, cultivateService);
   const producerController = new ProducerController(producerService);
 
+  router.get('/dashboard', asyncHandler((req: Request, res: Response) => producerController.getDashboardData(req, res)));
   router.post('/', validateDto(CreateProducerDto), asyncHandler((req: Request, res: Response) => producerController.create(req, res)));
   router.get('/', asyncHandler((req: Request, res: Response) => producerController.findAll(req, res)));
   router.get('/:id', asyncHandler((req: Request, res: Response) => producerController.findById(req, res)));

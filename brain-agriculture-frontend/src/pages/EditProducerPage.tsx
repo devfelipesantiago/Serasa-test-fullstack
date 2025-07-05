@@ -4,12 +4,25 @@ import { useGetProducerQuery, useDeleteFarmMutation } from '../api/apiSlice';
 import { EditProducerForm } from '../components/EditProducerForm';
 import { FarmCard } from '../components/FarmCard';
 import { FarmForm } from '../components/FarmForm';
+import type { Farm } from '../types/Farm';
 
 export const EditProducerPage: React.FC = () => {
   const { producerId } = useParams<{ producerId: string }>();
   const { data: producer, isLoading } = useGetProducerQuery(producerId!);
   const [deleteFarm] = useDeleteFarmMutation();
+
   const [showFarmForm, setShowFarmForm] = useState(false);
+  const [farmToEdit, setFarmToEdit] = useState<Farm | null>(null);
+
+  const handleEditClick = (farm: Farm) => {
+    setFarmToEdit(farm);
+    setShowFarmForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowFarmForm(false);
+    setFarmToEdit(null);
+  };
 
   const handleDeleteFarm = async (farmId: string) => {
     if (window.confirm('Tem a certeza que deseja excluir esta fazenda?')) {
@@ -34,7 +47,8 @@ export const EditProducerPage: React.FC = () => {
       {showFarmForm && (
         <FarmForm
           producerId={producer.id}
-          onClose={() => setShowFarmForm(false)}
+          farmToEdit={farmToEdit ?? undefined}
+          onClose={handleCloseForm}
         />
       )}
 
@@ -49,7 +63,7 @@ export const EditProducerPage: React.FC = () => {
           <FarmCard
             key={farm.id}
             farm={farm}
-            onEdit={() => alert(`Editar fazenda ${farm.name}`)}
+            onEdit={() => handleEditClick(farm)}
             onDelete={() => handleDeleteFarm(farm.id)}
           />
         ))

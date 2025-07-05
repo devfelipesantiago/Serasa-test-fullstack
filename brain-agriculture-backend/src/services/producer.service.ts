@@ -6,6 +6,8 @@ import { HarvestService } from './harvest.service';
 import { CultivateService } from './cultivate.service';
 import { Cultivate } from '../model/entities/cultivate.entity';
 import { ApiResponse } from '../utils/responseHandler.utils';
+import { DashboardDataDto } from '../dtos/DashboardDataDto';
+import { Farm } from '../model/entities/farm.entity';
 
 export class ProducerService {
   constructor(
@@ -157,6 +159,56 @@ export class ProducerService {
       success: true,
       data: cultivates,
       message: 'Cultivates retrieved successfully'
+    };
+  }
+
+  async getDashboardData(): Promise<ApiResponse<DashboardDataDto>> {
+    const farmsResponse = await this.farmService.findAll();
+    const cultivatesResponse = await this.cultivateService.findAll();
+
+    const allFarms = farmsResponse.data;
+    const allCultivates = cultivatesResponse.data;
+    if (!allFarms || !allCultivates) {
+      return {
+        success: false,
+        data: null,
+        message: 'No data available for dashboard'
+      };
+    }
+    const totalFarms = allFarms.length;
+    const totalArea = (allFarms ?? []).reduce((sum: number, farm: Farm) => sum + farm.totalArea, 0);
+
+    const stateDistribution = allFarms.reduce((acc: Record<string, number>, farm: Farm) => {
+      if (farm.state) {
+        acc[farm.state] = (acc[farm.state] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
+    const landUse = allFarms.reduce((acc: { arableArea: number; vegetationArea: number }, farm: Farm) => {
+      acc.arableArea += farm.arableArea;
+      acc.vegetationArea += farm.vegetationArea;
+      return acc;
+    }, { arableArea: 0, vegetationArea: 0 });
+
+    const cultureDistribution = allCultivates.reduce((acc: Record<string, number>, cultivate: Cultivate) => {
+      const cultureName = cultivate.name;
+      acc[cultureName] = (acc[cultureName] || 0) + 1;
+      return acc;
+    }, {});
+
+    const dashboardData: DashboardDataDto = {
+      totalFarms,
+      totalArea,
+      stateDistribution,
+      cultureDistribution,
+      landUse,
+    };
+
+    return {
+      success: true,
+      data: dashboardData,
+      message: 'Dashboard data retrieved successfully'
     };
   }
 }
