@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "ts-mocha --require tsconfig-paths/register src/test/**/*.test.ts --timeout 10000",
+    "test": "ts-mocha --require tsconfig-paths/register src/tests/**/*.test.ts --timeout 10000",
     "test:coverage": "nyc npm test",
-    "test:watch": "mocha --require ts-node/register --require tsconfig-paths/register src/test/**/*.test.ts --watch --timeout 10000",
+    "test:watch": "mocha --require ts-node/register --require tsconfig-paths/register src/tests/**/*.test.ts --watch --timeout 10000",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
   },
   "keywords": [],
